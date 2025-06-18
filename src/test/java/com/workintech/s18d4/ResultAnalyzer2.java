@@ -55,12 +55,19 @@ public class ResultAnalyzer2 implements TestWatcher, AfterAllCallback{
         long failure = summary.get(TestResultStatus.FAILED) != null ? summary.get(TestResultStatus.FAILED) : 0;
 
         double score = (double) success / (success + failure);
-        String userId = "999999";
+        String userId = "303444";
 
         JSONObject json = new JSONObject();
         json.put("score", score);
         json.put("taskId", taskId);
         json.put("userId", userId);
+        
+        System.out.println("=== RESULT ANALYZER 2 DEBUG ===");
+        System.out.println("Test Results: " + testResultsStatus);
+        System.out.println("Success: " + success + ", Failure: " + failure);
+        System.out.println("Score: " + score);
+        System.out.println("Sending JSON: " + json.toString());
+        
         sendTestResult(json.toString());
     }
 
@@ -72,7 +79,12 @@ public class ResultAnalyzer2 implements TestWatcher, AfterAllCallback{
             request.addHeader("content-type", "application/json");
             request.setEntity(params);
             HttpResponse response = httpClient.execute(request);
+            
+            System.out.println("API Response Status: " + response.getStatusLine().getStatusCode());
+            System.out.println("API Response: " + response.getStatusLine().getReasonPhrase());
+            
         } catch (Exception ex) {
+            System.out.println("API Call Failed: " + ex.getMessage());
             ex.printStackTrace();
         } finally {
             httpClient.close();
